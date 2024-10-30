@@ -5,11 +5,10 @@ import figureImg from "/monkey.png";
 function MapCanvas() {
   const canvasRef = useRef(null);
   const [figurePosition, setFigurePosition] = useState({ x: 0, y: 0 });
-  const [points, setPoints] = useState([
-    { x: 150, y: 100 },
-    { x: 150, y: 200 },
-    { x: 250, y: 300 }
-  ]);
+  const [points, setPoints] = useState(() => {
+    const savedPoints = localStorage.getItem("points");
+    return savedPoints ? JSON.parse(savedPoints) : []; 
+  });
 
   const drawCanvas = () => {
     const canvas = canvasRef.current;
@@ -36,7 +35,6 @@ function MapCanvas() {
         context.fill();
       });
 
-      // Рисуем изображение фигурки на canvas
       figure.onload = () => {
         context.drawImage(figure, figurePosition.x - 15, figurePosition.y - 15, 30, 30);
       };
@@ -59,7 +57,6 @@ function MapCanvas() {
     const rect = canvasRef.current.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-
     let pointClicked = false;
     points.forEach(point => {
       const distance = Math.sqrt((point.x - x) ** 2 + (point.y - y) ** 2);
@@ -68,8 +65,11 @@ function MapCanvas() {
         pointClicked = true; 
       }
     });
+
     if (!pointClicked) {
-      setPoints([...points, { x, y }]);
+      const newPoints = [...points, { x, y }];
+      setPoints(newPoints);
+      localStorage.setItem("points", JSON.stringify(newPoints)); 
     }
   };
 
