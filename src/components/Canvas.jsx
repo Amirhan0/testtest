@@ -4,7 +4,7 @@ import figureImg from "/monkey.png";
 
 function MapCanvas() {
   const canvasRef = useRef(null);
-  const [figurePosition, setFigurePosition] = useState({ x: 0, y: 0 });
+  const [figurePosition, setFigurePosition] = useState({ x: 237, y: 530 });
   const [points, setPoints] = useState(() => {
     const initialPoints = [
       { x: 237, y: 530 },
@@ -56,7 +56,6 @@ function MapCanvas() {
     localStorage.setItem("points", JSON.stringify(initialPoints));
     return initialPoints; 
   });
-
   const drawCanvas = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -78,11 +77,11 @@ function MapCanvas() {
       points.forEach(point => {
         context.beginPath();
         context.arc(point.x, point.y, 5, 0, Math.PI * 2);
-        context.fillStyle = "blue";
+        context.fillStyle = "#373D32";
         context.fill();
       });
       figure.onload = () => {
-        context.drawImage(figure, figurePosition.x - 15, figurePosition.y - 15, 30, 30);
+        context.drawImage(figure, figurePosition.x - 15, figurePosition.y - 15, 50, 50);
       };
     };
   };
@@ -103,12 +102,10 @@ function MapCanvas() {
     const rect = canvasRef.current.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    let pointClicked = false;
     points.forEach(point => {
       const distance = Math.sqrt((point.x - x) ** 2 + (point.y - y) ** 2);
       if (distance < 10) {
         setFigurePosition({ x: point.x, y: point.y });
-        pointClicked = true; 
       }
     });
   };
